@@ -12,7 +12,7 @@ class ClasscentralSpider(Spider):
 
     def parse(self, response):
         if self.subject:
-            subject_url - response.xpath('//a[contains(@title, "Programming")]/@href').extract_first()
+            subject_url = response.xpath('//a[contains(@title, "Programming")]/@href').extract_first()
             absolute_subject_url = response.urljoin(subject_url)
             yield Request(
                 absolute_subject_url,
@@ -20,6 +20,13 @@ class ClasscentralSpider(Spider):
                 )
         else:
             self.log('Scraping all pages')
+            subject_urls = response.xpath('//h3/a[1]/@href').extract()
+            for subject_url in subject_urls:
+                absolute_subject_url = response.urljoin(subject_url)
+                yield Request(
+                    absolute_subject_url,
+                    callback=self.parse_subject
+                    )
 
     def parse_subject(self, response):
         pass
