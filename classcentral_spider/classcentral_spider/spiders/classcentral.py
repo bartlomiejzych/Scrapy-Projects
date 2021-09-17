@@ -1,5 +1,8 @@
 from scrapy import Spider
 from scrapy.http import Request
+from time import sleep
+from selenium import webdriver
+from scrapy.selector import Selector
 
 
 class ClasscentralSpider(Spider):
@@ -9,6 +12,7 @@ class ClasscentralSpider(Spider):
 
     def __init__(self, subject=None):
         self.subject = subject
+        self.driver = webdriver.Chrome("D:/ScrapyProjects/chromedriver_win32/chromedriver.exe")
 
     def parse(self, response):
         if self.subject:
@@ -29,9 +33,22 @@ class ClasscentralSpider(Spider):
                     )
 
     def parse_subject(self, response):
-        subject_name = response.xpath('//h1/text()').extract_first()
+        self.driver.get(response.url)
+        sleep(6)
+ 
+        while True:
+            try:
+                self.driver.find_element_by_xpath('//button[@data-name="LOAD_MORE"]').click()
+                sleep(6)
+            except:
+                self.log('No more pages to load.')
+                break
 
-        courses = response.xpath('//*[@class="color-charcoal course-name"]')
+        sel = Selector(text=self.driver.page_source)
+
+        subject_name = sel.xpath('//h1/text()').extract_first()
+
+        courses = sel.xpath('//*[@class="color-charcoal course-name"]')
         for course in courses:
             course_name = course.xpath('.//*[@itemprop="name"]/text()').extract_first()
             course_url = course.xpath('./@href').extract_first()
