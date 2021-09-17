@@ -29,4 +29,19 @@ class ClasscentralSpider(Spider):
                     )
 
     def parse_subject(self, response):
-        pass
+        subject_name = response.xpath('//h1/text()').extract_first()
+
+        courses = response.xpath('//*[@class="color-charcoal course-name"]')
+        for course in courses:
+            course_name = course.xpath('.//*[@itemprop="name"]/text()').extract_first()
+            course_url = course.xpath('./@href').extract_first()
+            absolute_course_url = response.urljoin(course_url)
+
+            yield{
+                'subject_name': subject_name,
+                'course_name': course_name,
+                'course_url': absolute_course_url,
+                }   
+
+
+
