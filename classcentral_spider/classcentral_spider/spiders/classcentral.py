@@ -20,7 +20,7 @@ class ClasscentralSpider(Spider):
             absolute_subject_url = response.urljoin(subject_url)
             yield Request(
                 absolute_subject_url,
-                callback=self.parse_subject
+                callback=self.parse_subject,
                 )
         else:
             self.log('Scraping all pages')
@@ -29,17 +29,17 @@ class ClasscentralSpider(Spider):
                 absolute_subject_url = response.urljoin(subject_url)
                 yield Request(
                     absolute_subject_url,
-                    callback=self.parse_subject
+                    callback=self.parse_subject,
                     )
 
     def parse_subject(self, response):
         self.driver.get(response.url)
-        sleep(6)
+        sleep(5)
  
         while True:
             try:
                 self.driver.find_element_by_xpath('//button[@data-name="LOAD_MORE"]').click()
-                sleep(6)
+                sleep(5)
             except:
                 self.log('No more pages to load.')
                 break
@@ -58,7 +58,5 @@ class ClasscentralSpider(Spider):
                 'subject_name': subject_name,
                 'course_name': course_name,
                 'course_url': absolute_course_url,
-                }   
-
-
+                }  
 
