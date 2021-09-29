@@ -20,7 +20,7 @@ class ClasscentralSpider(Spider):
             absolute_subject_url = response.urljoin(subject_url)
             yield Request(
                 absolute_subject_url,
-                callback=self.parse_subject
+                callback=self.parse_subject,
                 )
         else:
             self.log('Scraping all pages')
@@ -29,7 +29,7 @@ class ClasscentralSpider(Spider):
                 absolute_subject_url = response.urljoin(subject_url)
                 yield Request(
                     absolute_subject_url,
-                    callback=self.parse_subject
+                    callback=self.parse_subject,
                     )
 
     def parse_subject(self, response):
@@ -59,7 +59,3 @@ class ClasscentralSpider(Spider):
                 'course_name': course_name,
                 'course_url': absolute_course_url,
                 }   
-
-
-
-
