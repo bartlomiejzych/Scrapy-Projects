@@ -1,5 +1,7 @@
+import json
 from scrapy import Spider
 from scrapy.http import Request
+
 
 class ShoesSpider(Spider):
     name = 'shoes'
@@ -27,4 +29,11 @@ class ShoesSpider(Spider):
                     )
 
     def parse_product_price(self, response):
-        pass
+        jsonresponse = json.loads(response.body.decode('utf-8'))
+
+        price = jsonresponse[0]['productPrice']['current']['text']
+
+        yield{
+            'product_name': response.meta['product_name'],
+            'price': price,
+            }
