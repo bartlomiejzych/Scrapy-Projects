@@ -15,6 +15,12 @@ class ShoesSpider(Spider):
                         url,
                         callback=self.parse_product,
                         )
+        next_page_url = response.xpath('//a[text()="Load more"]/@href').extract_first()
+        if next_page_url:
+            yield Request(
+                        next_page_url,
+                        callback=self.parse,
+                        )
 
     def parse_product(self, response):
 
