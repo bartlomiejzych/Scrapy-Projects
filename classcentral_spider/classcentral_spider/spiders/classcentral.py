@@ -58,5 +58,6 @@ class ClasscentralSpider(Spider):
                 'subject_name': subject_name,
                 'course_name': course_name,
                 'course_url': absolute_course_url,
-                }  
+            }
+  
 
